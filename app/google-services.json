@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "62354262835",
+    "project_id": "my-events-management-app",
+    "storage_bucket": "my-events-management-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62354262835:android:32485e15ce89f471924c46",
+        "android_client_info": {
+          "package_name": "com.example.myeventsmanagmentapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62354262835-lcbft6065arqs5gaicvuk3bjh3selg09.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myeventsmanagmentapp",
+            "certificate_hash": "c0e3f20efbef597ca915ea52e1aefba882ed0e7a"
+          }
+        },
+        {
+          "client_id": "62354262835-nk2hem0okqad2jg6pbcoo4onprfou680.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOvI8izRh-dEQ6nnUfCKsXKTWQ5QVQvbc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62354262835-nk2hem0okqad2jg6pbcoo4onprfou680.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
