@@ -11,12 +11,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
+    private val auth = Firebase.auth
     var isSignedIn =
-        if (Firebase.auth.currentUser == null) mutableStateOf(Screens.Authentication.route) else mutableStateOf(
+        if (auth.currentUser == null) mutableStateOf(Screens.Authentication.route) else mutableStateOf(
             Screens.MainApp.route
         )
-    private val auth = Firebase.auth
     val error = mutableStateOf("")
+
+
     fun login(email: String, password: String) {
         //error.value = ""
         auth.signInWithEmailAndPassword(email, password)
@@ -26,12 +28,17 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                     error.value = "Successful "
                 } else {
                     // Handle login failure
-                    val exception = task.exception
                     // Display error message to the user
                     error.value = task.exception?.message.orEmpty()
                 }
             }
     }
+
+    fun logout() {
+        auth.signOut()
+        isSignedIn.value = Screens.Authentication.route
+    }
+
 
     fun signup(email: String, password: String) {
         //   error.value = ""
@@ -39,7 +46,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Handle successful login
-                    error.value = "Successful "
+                    //error.value = "Successful "
                 } else {
                     // Handle login failure
                     val exception = task.exception
@@ -54,10 +61,9 @@ class AuthViewModel @Inject constructor() : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Handle successful login
-                    error.value = "Successful "
+                    //error.value = "Successful "
                 } else {
                     // Handle login failure
-                    val exception = task.exception
                     // Display error message to the user
                     error.value = task.exception?.message.orEmpty()
                 }

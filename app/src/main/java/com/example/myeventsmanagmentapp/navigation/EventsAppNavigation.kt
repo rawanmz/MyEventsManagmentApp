@@ -1,17 +1,19 @@
 package com.example.myeventsmanagmentapp.navigation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.myeventsmanagmentapp.screens.auth.AuthViewModel
 import com.example.myeventsmanagmentapp.screens.auth.LoginScreen
@@ -21,7 +23,7 @@ import com.example.myeventsmanagmentapp.screens.auth.SplashScreen
 @Composable
 fun EventsAppNavigation(
     authViewModel: AuthViewModel,
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
@@ -29,7 +31,9 @@ fun EventsAppNavigation(
     ) {
 
         authNavigation(navController, authViewModel)
-        mainAppNavigation(navController)
+        mainAppNavigation(navController){
+            authViewModel.logout()
+        }
     }
 }
 
@@ -57,32 +61,65 @@ fun NavGraphBuilder.authNavigation(
 
 
 fun NavGraphBuilder.mainAppNavigation(
-    navController: NavHostController
+    navController: NavHostController,
+    logout: () -> Unit
 ) {
     navigation(
         startDestination = Screens.MainApp.Home.route,
         route = Screens.MainApp.route,
     ) {
         composable(Screens.MainApp.Home.route) {
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Gray)
-                .clickable {
-                    navController.navigate(Screens.MainApp.AddScreen.route)
-                }) {
+            Column(modifier = Modifier.fillMaxSize()) {
 
             }
         }
 
-        composable(Screens.MainApp.AddScreen.route) {
+        composable(Screens.MainApp.TaskByDate.route) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Yellow)
+            ) {
+
+            }
+        }
+        composable(Screens.MainApp.CategoryScreen.route) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Red)
             ) {
+                Button(onClick = {
+                    logout.invoke()
+                }) {
+                    Text(text = "SignOut")
+                }
+            }
+        }
+        composable(Screens.MainApp.AddScreen.route) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Magenta)
+            ) {
 
             }
         }
+        composable(Screens.MainApp.StaticsScreen.route) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Green)
+            ) {
 
+            }
+        }
+    }
+}
+
+fun NavOptionsBuilder.popUpToTop(navController: NavController) {
+    popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
+        saveState = true
+        inclusive = true
     }
 }
