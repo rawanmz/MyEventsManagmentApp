@@ -1,8 +1,11 @@
 package com.example.myeventsmanagmentapp.screens.auth
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.myeventsmanagmentapp.navigation.Screens
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,8 +37,12 @@ class AuthViewModel @Inject constructor() : ViewModel() {
             }
     }
 
-    fun logout() {
+    fun logout(context: Context) {
         auth.signOut()
+        GoogleSignIn.getClient(
+            context,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        ).signOut()
         isSignedIn.value = Screens.Authentication.route
     }
 

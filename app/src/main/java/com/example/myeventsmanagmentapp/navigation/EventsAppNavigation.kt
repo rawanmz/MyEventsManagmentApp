@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -25,13 +26,14 @@ fun EventsAppNavigation(
     authViewModel: AuthViewModel,
     navController: NavHostController
 ) {
+    val context = LocalContext.current
     NavHost(
         navController = navController,
         startDestination = authViewModel.isSignedIn.value,
     ) {
         authNavigation(navController, authViewModel)
         mainAppNavigation(navController){
-            authViewModel.logout()
+            authViewModel.logout(context)
         }
     }
 }
