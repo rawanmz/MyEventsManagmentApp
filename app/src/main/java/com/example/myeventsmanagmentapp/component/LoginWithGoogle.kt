@@ -31,25 +31,22 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 @Composable
-fun LoginWithGoogle(authViewModel: AuthViewModel) {
+fun LoginWithGoogle() {
+    val context = LocalContext.current
     //to do add it build config file
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
     val launcher = rememberFirebaseAuthLauncher(
         onAuthComplete = { result ->
             user = result.user
-            authViewModel.isSignedIn.value = Screens.MainApp.route
         },
         onAuthError = {
             user = null
-            authViewModel.isSignedIn.value = Screens.Authentication.route
         }
     )
 
     val token =
         "62354262835-nk2hem0okqad2jg6pbcoo4onprfou680.apps.googleusercontent.com"
-    val context = LocalContext.current
     if (user == null) {
-        authViewModel.isSignedIn.value = Screens.Authentication.route
         Image(
             modifier = Modifier.padding(4.dp).clickable {
                 val gso =
@@ -63,8 +60,6 @@ fun LoginWithGoogle(authViewModel: AuthViewModel) {
             painter = painterResource(id = R.drawable.google_rounded),
             contentDescription = "google "
         )
-    } else {
-        authViewModel.isSignedIn.value = Screens.MainApp.route
     }
 }
 

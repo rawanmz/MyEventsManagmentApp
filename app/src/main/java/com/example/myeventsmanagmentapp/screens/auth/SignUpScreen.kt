@@ -147,7 +147,7 @@ fun SignUpScreen(navController: NavHostController, authViewModel: AuthViewModel)
             )
         }
 
-        LoginWithGoogle(authViewModel)
+        LoginWithGoogle()
 
     }
 }

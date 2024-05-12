@@ -14,13 +14,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
-    private val auth = Firebase.auth
+    var auth = Firebase.auth
     var isSignedIn =
         if (auth.currentUser == null) mutableStateOf(Screens.Authentication.route) else mutableStateOf(
             Screens.MainApp.route
         )
     val error = mutableStateOf("")
 
+    init {
+        auth.apply {
+            this.addAuthStateListener {
+                isSignedIn.value =
+                    if (it.currentUser == null) Screens.Authentication.route else Screens.MainApp.route
+
+            }
+        }
+    }
 
     fun login(email: String, password: String) {
         //error.value = ""
@@ -43,7 +52,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
             context,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         ).signOut()
-        isSignedIn.value = Screens.Authentication.route
+       // isSignedIn.value = Screens.Authentication.route
     }
 
 

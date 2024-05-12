@@ -138,6 +138,6 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
             )
         }
 
-        LoginWithGoogle(authViewModel)
+        LoginWithGoogle()
     }
 }
