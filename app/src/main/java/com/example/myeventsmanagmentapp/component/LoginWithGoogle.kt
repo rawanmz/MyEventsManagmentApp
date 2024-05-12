@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.myeventsmanagmentapp.BuildConfig
 import com.example.myeventsmanagmentapp.R
 import com.example.myeventsmanagmentapp.navigation.Screens
 import com.example.myeventsmanagmentapp.screens.auth.AuthViewModel
@@ -44,14 +45,13 @@ fun LoginWithGoogle() {
         }
     )
 
-    val token =
-        "62354262835-nk2hem0okqad2jg6pbcoo4onprfou680.apps.googleusercontent.com"
+
     if (user == null) {
         Image(
             modifier = Modifier.padding(4.dp).clickable {
                 val gso =
                     GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(token)
+                        .requestIdToken(BuildConfig.token)
                         .requestEmail()
                         .build()
                 val googleSignInClient = GoogleSignIn.getClient(context, gso)

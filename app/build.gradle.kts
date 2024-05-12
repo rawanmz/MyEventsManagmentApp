@@ -22,6 +22,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val token = properties["token"]
+        buildConfigField("String", "token", "\"$token\"")
+
     }
 
     buildTypes {
@@ -51,6 +55,8 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    android.buildFeatures.buildConfig = true
+
 }
 
 dependencies {
