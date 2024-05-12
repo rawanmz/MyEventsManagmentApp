@@ -29,7 +29,6 @@ fun EventsAppNavigation(
         navController = navController,
         startDestination = authViewModel.isSignedIn.value,
     ) {
-
         authNavigation(navController, authViewModel)
         mainAppNavigation(navController){
             authViewModel.logout()

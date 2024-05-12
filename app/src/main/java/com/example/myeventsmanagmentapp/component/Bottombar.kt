@@ -1,4 +1,4 @@
-package com.example.myeventsmanagmentapp.screens.component
+package com.example.myeventsmanagmentapp.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

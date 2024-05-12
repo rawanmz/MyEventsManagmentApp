@@ -25,7 +25,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Handle successful login
-                    error.value = "Successful "
+//                    error.value = "Successful "
                 } else {
                     // Handle login failure
                     // Display error message to the user

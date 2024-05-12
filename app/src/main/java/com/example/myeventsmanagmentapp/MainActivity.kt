@@ -3,22 +3,14 @@ package com.example.myeventsmanagmentapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults.windowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -33,7 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myeventsmanagmentapp.navigation.EventsAppNavigation
 import com.example.myeventsmanagmentapp.navigation.Screens
 import com.example.myeventsmanagmentapp.screens.auth.AuthViewModel
-import com.example.myeventsmanagmentapp.screens.component.BottomBar
+import com.example.myeventsmanagmentapp.component.BottomBar
 import com.example.myeventsmanagmentapp.ui.theme.MyEventsManagmentAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.FirebaseApp
@@ -60,10 +52,6 @@ class MainActivity : ComponentActivity() {
                     Screens.MainApp.StaticsScreen.route -> true
                     else -> false
                 }
-                val navigationSelectedItem = rememberSaveable {
-                    mutableIntStateOf(0)
-                }
-
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
