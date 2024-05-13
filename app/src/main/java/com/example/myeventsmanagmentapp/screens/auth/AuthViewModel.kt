@@ -7,6 +7,7 @@ import com.example.myeventsmanagmentapp.navigation.Screens
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.Firebase
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,6 +23,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     val error = mutableStateOf("")
 
     init {
+
         auth.apply {
             this.addAuthStateListener {
                 isSignedIn.value =
@@ -48,21 +50,24 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
     fun logout(context: Context) {
         auth.signOut()
-        GoogleSignIn.getClient(
-            context,
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+       GoogleSignIn.getClient(
+                context,
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         ).signOut()
-       // isSignedIn.value = Screens.Authentication.route
     }
 
 
-    fun signup(email: String, password: String) {
+    fun signup(email: String, password: String,userName:String) {
         //   error.value = ""
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Handle successful login
                     //error.value = "Successful "
+                    val profileUpdates = UserProfileChangeRequest.Builder()
+                        .setDisplayName(userName)
+                        .build()
+                    auth.currentUser?.updateProfile(profileUpdates)
                 } else {
                     // Handle login failure
                     val exception = task.exception
@@ -73,6 +78,20 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     }
 
     fun restPassword(email: String) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Handle successful login
+                    //error.value = "Successful "
+                } else {
+                    // Handle login failure
+                    // Display error message to the user
+                    error.value = task.exception?.message.orEmpty()
+                }
+            }
+    }
+
+    fun restProfile(email: String) {
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

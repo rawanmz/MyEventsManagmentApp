@@ -20,6 +20,7 @@ import com.example.myeventsmanagmentapp.screens.auth.AuthViewModel
 import com.example.myeventsmanagmentapp.screens.auth.LoginScreen
 import com.example.myeventsmanagmentapp.screens.auth.SignUpScreen
 import com.example.myeventsmanagmentapp.screens.auth.SplashScreen
+import com.google.firebase.auth.FirebaseUser
 
 @Composable
 fun EventsAppNavigation(
@@ -32,8 +33,8 @@ fun EventsAppNavigation(
         startDestination = authViewModel.isSignedIn.value,
     ) {
         authNavigation(navController, authViewModel)
-        mainAppNavigation(navController){
-            authViewModel.logout(context)
+        mainAppNavigation(navController, logout ={authViewModel.logout(context)} ){
+            authViewModel.auth.currentUser
         }
     }
 }
@@ -63,7 +64,8 @@ fun NavGraphBuilder.authNavigation(
 
 fun NavGraphBuilder.mainAppNavigation(
     navController: NavHostController,
-    logout: () -> Unit
+    logout: () -> Unit,
+    userName: () -> FirebaseUser?
 ) {
     navigation(
         startDestination = Screens.MainApp.Home.route,
@@ -81,7 +83,7 @@ fun NavGraphBuilder.mainAppNavigation(
                     .fillMaxSize()
                     .background(Color.Yellow)
             ) {
-
+                Text(text = userName.invoke()?.displayName.orEmpty())
             }
         }
         composable(Screens.MainApp.CategoryScreen.route) {

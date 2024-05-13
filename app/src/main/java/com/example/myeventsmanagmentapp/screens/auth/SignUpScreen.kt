@@ -118,7 +118,7 @@ fun SignUpScreen(navController: NavHostController, authViewModel: AuthViewModel)
         Button(
             onClick = {
                 if(emailState.value.text.isNotEmpty() && passwordState.value.text.isNotEmpty()) {
-                    authViewModel.signup(emailState.value.text.trim(), passwordState.value.text.trim())
+                    authViewModel.signup(emailState.value.text.trim(), passwordState.value.text.trim(),userName.value.text)
                 }
             },
             shape = RoundedCornerShape(12.dp),
