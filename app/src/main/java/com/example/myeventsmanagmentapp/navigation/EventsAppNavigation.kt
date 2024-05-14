@@ -2,12 +2,18 @@ package com.example.myeventsmanagmentapp.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -20,7 +26,13 @@ import com.example.myeventsmanagmentapp.screens.auth.AuthViewModel
 import com.example.myeventsmanagmentapp.screens.auth.LoginScreen
 import com.example.myeventsmanagmentapp.screens.auth.SignUpScreen
 import com.example.myeventsmanagmentapp.screens.auth.SplashScreen
+import com.example.myeventsmanagmentapp.screens.task.HomeScreen
+import com.example.myeventsmanagmentapp.screens.task.TaskViewModel
+import com.himanshoe.kalendar.ui.Kalendar
+import com.himanshoe.kalendar.ui.KalendarType
 import com.google.firebase.auth.FirebaseUser
+import com.himanshoe.kalendar.common.KalendarKonfig
+import com.himanshoe.kalendar.common.KalendarStyle
 
 @Composable
 fun EventsAppNavigation(
@@ -72,18 +84,34 @@ fun NavGraphBuilder.mainAppNavigation(
         route = Screens.MainApp.route,
     ) {
         composable(Screens.MainApp.Home.route) {
-            Column(modifier = Modifier.fillMaxSize()) {
-
-            }
+           HomeScreen()
         }
 
         composable(Screens.MainApp.TaskByDate.route) {
-            Column(
+            val viewmodel:TaskViewModel= hiltViewModel()
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Yellow)
             ) {
-                Text(text = userName.invoke()?.displayName.orEmpty())
+                item {
+//                Kalendar(
+//                    kalendarStyle = KalendarStyle(
+//
+//                    ),
+//                    kalendarType = KalendarType.Oceanic(),
+//                    onCurrentDayClick = { localeDate, evemt ->
+//                    }
+//                )
+                    val result = viewmodel.tasks.collectAsState(null)
+                    val tags = viewmodel.tags.collectAsState(null)
+                    val tasksByTag = viewmodel.tasksbyTags.collectAsState(null)
+
+               Text(text = result.value.toString())
+                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
+                    Text(text = tasksByTag.value.toString())
+                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
+                    Text(text = tags.value.toString())
+                }
             }
         }
         composable(Screens.MainApp.CategoryScreen.route) {
