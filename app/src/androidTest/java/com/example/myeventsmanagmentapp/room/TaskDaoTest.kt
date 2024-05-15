@@ -104,8 +104,7 @@ class TaskDaoTest {
     fun upsertTag() = runTest {
         val tag = Tags(
            "Personal",
-            "color",
-            ""
+            "color"
         )
         taskDao.upsertTag(tag)
         val allTags = taskDao.getAllTags().first()
@@ -115,8 +114,7 @@ class TaskDaoTest {
     fun deleteTag() = runTest {
         val tag = Tags(
             "Personal",
-            "color",
-            ""
+            "color"
         )
 
         taskDao.upsertTag(tag)
@@ -131,13 +129,11 @@ class TaskDaoTest {
     fun getAllTags() = runTest {
         val tag = Tags(
             "Personal",
-            "color",
-            ""
+            "color"
         )
         val tag2 = Tags(
             "Work",
-            "color",
-            ""
+            "color"
         )
         taskDao.upsertTag(tag)
         taskDao.upsertTag(tag2)
@@ -150,13 +146,11 @@ class TaskDaoTest {
 
         val tag = Tags(
             "Personal",
-            "color",
-            ""
+            "color"
         )
         val tag2 = Tags(
             "Work",
-            "color",
-            ""
+            "color"
         )
 
         val task = Task(

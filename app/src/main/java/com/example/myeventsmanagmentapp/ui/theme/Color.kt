@@ -18,3 +18,5 @@ val LightPurple = Color(0xFF8F99EB)
 val LightRed = Color(0xFFFFF2F2)
 val LightGreen = Color(0xFFCBF9D8)
 
+val Navy = Color(0xFF12175E)
+

@@ -18,6 +18,8 @@ sealed class Screens(val route: String) {
         data object AddScreen : Screens("add_screen")
         data object CategoryScreen : Screens("category_screen")
         data object StaticsScreen : Screens("Statics_screen")
+        data object DateDialog: Screens("DateDialog")
+
 
     }
     data object Authentication : Screens("authGraph") {

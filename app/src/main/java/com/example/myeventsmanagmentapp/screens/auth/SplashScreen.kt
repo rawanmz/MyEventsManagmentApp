@@ -1,7 +1,6 @@
 package com.example.myeventsmanagmentapp.screens.auth
 
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,8 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.padding import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -20,6 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,20 +34,34 @@ import com.example.myeventsmanagmentapp.ui.theme.PrimaryColor
 @Composable
 fun SplashScreen(navController: NavHostController) {
     Column(
-        Modifier.fillMaxSize(),
+        Modifier
+            .fillMaxSize()
+            .semantics {
+                testTag = "SplashScreen"
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painter = painterResource(id = R.drawable.intro_image), contentDescription = "")
+        Image(modifier = Modifier.semantics {
+            testTag = "intro image"
+        }, painter = painterResource(id = R.drawable.intro_image), contentDescription = null)
         Text(
-            modifier = Modifier.padding(vertical = 8.dp),
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .semantics {
+                    contentDescription = "title text"
+                },
             text = "Dailoz",
             color = PrimaryColor,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp
         )
         Text(
-            modifier = Modifier.padding(horizontal = 22.dp),
+            modifier = Modifier
+                .padding(horizontal = 22.dp)
+                .semantics {
+                    contentDescription = "description text"
+                },
             textAlign = TextAlign.Center,
             text = "Plan what you will do to be more organized for today, tomorrow and beyond",
         )
@@ -59,7 +74,10 @@ fun SplashScreen(navController: NavHostController) {
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth(0.8f)
-                .padding(12.dp),
+                .padding(12.dp)
+                .semantics {
+                    testTag = "Login Button"
+                },
             colors = ButtonDefaults.buttonColors(
                 containerColor = PrimaryColor
             )

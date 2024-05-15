@@ -1,6 +1,5 @@
 package com.example.myeventsmanagmentapp.data.repository
 
-import android.nfc.Tag
 import com.example.myeventsmanagmentapp.data.dao.TaskDao
 import com.example.myeventsmanagmentapp.data.entity.Tags
 import com.example.myeventsmanagmentapp.data.entity.Task
@@ -39,5 +38,13 @@ class TaskRepository @Inject constructor(
 
     fun getAllTags(): Flow<List<Tags>> {
         return taskDao.getAllTags()
+    }
+
+    suspend fun insertTagList(tagList: List<Tags>) {
+        return taskDao.upsertTagList(tagList)
+    }
+
+    fun sortTasksByTag(date: String): Flow<List<Task>> {
+        return taskDao.sortByCreationDate(date)
     }
 }
