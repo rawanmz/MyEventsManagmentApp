@@ -24,8 +24,7 @@ class AddTaskViewModel @Inject constructor(val taskRepository: TaskRepository) :
     val category: MutableState<String> = mutableStateOf("")
 
     var allTasks = taskRepository.getAllTasks()
-
-
+    val allTags = taskRepository.getAllTags()
     fun addTask() {
         viewModelScope.launch {
             val task = Task(
@@ -38,12 +37,6 @@ class AddTaskViewModel @Inject constructor(val taskRepository: TaskRepository) :
                 tagName = category.value
             )
             taskRepository.insertTask(task)
-        }
-    }
-
-    fun addTags(list: List<Tags>) {
-        viewModelScope.launch {
-            taskRepository.insertTagList(list)
         }
     }
 }

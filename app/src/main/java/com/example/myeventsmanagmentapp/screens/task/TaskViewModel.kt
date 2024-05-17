@@ -1,10 +1,20 @@
 package com.example.myeventsmanagmentapp.screens.task
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myeventsmanagmentapp.data.entity.Tags
+import com.example.myeventsmanagmentapp.data.entity.TaskType
+import com.example.myeventsmanagmentapp.data.entity.TaskWithTagLists
 import com.example.myeventsmanagmentapp.data.repository.TaskRepository
+import com.example.myeventsmanagmentapp.ui.theme.LightBlue
+import com.example.myeventsmanagmentapp.ui.theme.LightGreen
+import com.example.myeventsmanagmentapp.ui.theme.LightOrange
+import com.example.myeventsmanagmentapp.ui.theme.LightPurple
+import com.example.myeventsmanagmentapp.ui.theme.LightRed
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -12,25 +22,28 @@ import javax.inject.Inject
 class TaskViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-    val tasks = taskRepository.getAllTasks()
-    val tags = taskRepository.getAllTags()
-    val tasksbyTags = taskRepository.getTagsWithTask("Personal")
-    init {
-        viewModelScope.launch {
-            taskRepository.insertTag(
-                Tags(
-                    "Work",
-                    "color"
-                )
-            )
+    val tasks = mutableStateOf(taskRepository.getAllTasks())
 
-            taskRepository.insertTag(
-                Tags(
-                    "Personal",
-                    "color"
-                )
-            )
+    val tags = taskRepository.getAllTags()
+    val cancelledTasks = taskRepository.getTagsWithTask(TaskType.Cancelled.type)
+    val pendingTasks = taskRepository.getTagsWithTask(TaskType.Pending.type)
+    val completedTasks = taskRepository.getTagsWithTask(TaskType.Completed.type)
+    val onGoingTasks = taskRepository.getTagsWithTask(TaskType.OnGoing.type)
+
+    init {
+        //add base tags
+        viewModelScope.launch {
+            val tagsList = TaskType.entries.map {
+                Tags(it.type, it.color)
+            }
+            taskRepository.insertTagList(tagsList)
         }
 
+    }
+
+    fun sortTasksByDate(date: String) {
+        viewModelScope.launch {
+            tasks.value = taskRepository.sortTasksByDate(date)
+        }
     }
 }

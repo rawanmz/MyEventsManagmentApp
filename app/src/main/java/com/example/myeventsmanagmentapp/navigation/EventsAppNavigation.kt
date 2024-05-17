@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -81,7 +82,8 @@ fun NavGraphBuilder.mainAppNavigation(
         route = Screens.MainApp.route,
     ) {
         composable(Screens.MainApp.Home.route) {
-            HomeScreen(userName.invoke())
+            val viewModel: TaskViewModel = hiltViewModel()
+            HomeScreen(userName.invoke(), navController, viewModel)
         }
 
         composable(Screens.MainApp.TaskByDate.route) {
@@ -104,6 +106,7 @@ fun NavGraphBuilder.mainAppNavigation(
         composable(Screens.MainApp.AddScreen.route) {
             val viewmodel: AddTaskViewModel = hiltViewModel()
             viewmodel.taskDate.value = it.savedStateHandle.get<String>("selectedDate").orEmpty()
+
             AddTaskScreen(navController, viewmodel)
         }
         composable(Screens.MainApp.StaticsScreen.route) {
@@ -115,9 +118,28 @@ fun NavGraphBuilder.mainAppNavigation(
 
             }
         }
-        dialog(Screens.MainApp.DateDialog.route) {
-            MonthlyHorizontalCalendarView(navController)
+        dialog(
+            Screens.MainApp.DateDialog.route, dialogProperties = DialogProperties(
+                dismissOnClickOutside = true,
+                dismissOnBackPress = true
+            )
+        ) {
+
+            MonthlyHorizontalCalendarView(navController) {
+                navController.popBackStack()
+            }
         }
+//        dialog(Screens.MainApp.TimeDialog.route, dialogProperties = DialogProperties(
+//            dismissOnClickOutside = true,
+//            dismissOnBackPress = true
+//        )) {
+//            TimePickerDialog(navController, onBackPress = {
+//                navController.popBackStack()
+//            }, onTimeSelected ={ hour, minute ->
+//                "$hour:$minute"
+//            })
+//        }
+
 
     }
 }

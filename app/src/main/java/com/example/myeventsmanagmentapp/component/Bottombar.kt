@@ -12,16 +12,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.myeventsmanagmentapp.navigation.BottomNavigationItem
 import com.example.myeventsmanagmentapp.navigation.Screens
 import com.example.myeventsmanagmentapp.navigation.popUpToTop
@@ -57,14 +57,12 @@ fun BottomBar(navController: NavHostController) {
                             "",
                             modifier = Modifier
                                 .size(75.dp)
+                                .semantics {
+                                    testTag = "Navigate To Add Screen"
+                                }
                                 .clickable {
                                     navigationSelectedItem.value = index
-                                    navController.navigate(bottomNavigationItem.route) {
-                                        popUpToTop(navController)
-                                        launchSingleTop = true
-                                        // Restore state when reselecting a previously selected item
-                                        restoreState = true
-                                    }
+                                    navController.navigate(bottomNavigationItem.route)
                                 },
                             tint = PrimaryColor
                         )
@@ -78,7 +76,6 @@ fun BottomBar(navController: NavHostController) {
                                     navController.navigate(bottomNavigationItem.route) {
                                         popUpToTop(navController)
                                         launchSingleTop = true
-                                        // Restore state when reselecting a previously selected item
                                         restoreState = true
                                     }
                                 }

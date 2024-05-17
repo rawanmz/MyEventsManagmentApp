@@ -44,7 +44,7 @@ class TaskRepository @Inject constructor(
         return taskDao.upsertTagList(tagList)
     }
 
-    fun sortTasksByTag(date: String): Flow<List<Task>> {
+    fun sortTasksByDate(date: String): Flow<List<Task>> {
         return taskDao.sortByCreationDate(date)
     }
 }

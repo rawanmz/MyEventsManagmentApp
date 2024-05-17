@@ -24,9 +24,10 @@ fun CustomTextField(
     label: String,
     textColor: Color,
     value: MutableState<String>,
+    isReadOnly: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(vertical = 12.dp)) {
         Text(
             label,
             Modifier.padding(end = 20.dp, start = 20.dp),
@@ -43,7 +44,7 @@ fun CustomTextField(
                 focusedIndicatorColor = textColor,
                 focusedLabelColor = textColor,
             ),
-            readOnly = if(trailingIcon==null) false else true,
+            readOnly = isReadOnly,
             trailingIcon = { trailingIcon?.invoke() },
             value = value.value,
             onValueChange = {

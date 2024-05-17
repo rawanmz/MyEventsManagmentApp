@@ -44,11 +44,11 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: Tags?) 
         colors = CardDefaults.cardColors(
             containerColor = Color(
                 tag?.color?.toIntOrNull() ?: PrimaryColor.toArgb()
-            ).copy(0.3f)
+            ).copy(0.1f)
         )
 
     ) {
-        Column {
+        Column() {
             Row(
                 Modifier
                     .fillMaxWidth()

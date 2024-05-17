@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,8 +26,9 @@ import com.example.myeventsmanagmentapp.R
 import com.example.myeventsmanagmentapp.ui.theme.Navy
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TasksHeaderView(title: String) {
+fun TasksHeaderView(title: String, onBackClicked: () -> Boolean) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +36,6 @@ fun TasksHeaderView(title: String) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
         ) {
-
 
         Card(
             modifier = Modifier.weight(0.18f).padding(7.dp),
@@ -45,7 +46,9 @@ fun TasksHeaderView(title: String) {
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 16.dp
             ),
-
+            onClick = {
+                onBackClicked.invoke()
+            }
             ) {
             Image(
                 painter = painterResource(id = R.drawable.custom_arrow_icon),
@@ -68,11 +71,4 @@ fun TasksHeaderView(title: String) {
             textAlign = TextAlign.Center
         )
     }
-}
-
-
-@Preview
-@Composable
-fun TasksHeaderViewPreview() {
-    TasksHeaderView("Add Task ")
 }

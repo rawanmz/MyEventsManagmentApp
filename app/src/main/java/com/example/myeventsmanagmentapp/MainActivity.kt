@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
 
                 showBottomBar = when (navBackStackEntry?.destination?.route) {
                     Screens.MainApp.Home.route -> true
-                    Screens.MainApp.AddScreen.route -> true
                     Screens.MainApp.TaskByDate.route -> true
                     Screens.MainApp.CategoryScreen.route -> true
                     Screens.MainApp.StaticsScreen.route -> true
