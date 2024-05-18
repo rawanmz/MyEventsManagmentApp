@@ -39,6 +39,7 @@ import com.example.myeventsmanagmentapp.R
 import com.example.myeventsmanagmentapp.component.TaskCard
 import com.example.myeventsmanagmentapp.component.TaskCategoryCard
 import com.example.myeventsmanagmentapp.data.entity.TaskType
+import com.example.myeventsmanagmentapp.getAllSystemIcons
 import com.example.myeventsmanagmentapp.navigation.Screens
 import com.example.myeventsmanagmentapp.ui.theme.Navy
 import com.example.myeventsmanagmentapp.ui.theme.PrimaryColor
@@ -51,12 +52,14 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
     LaunchedEffect(Unit) {
         viewModel.sortTasksByDate(LocalDate.now().toString())
     }
+
     val completedTask = viewModel.completedTasks.collectAsState(initial = null)
     val cancelledTask = viewModel.cancelledTasks.collectAsState(initial = null)
     val onGoingTask = viewModel.onGoingTasks.collectAsState(initial = null)
     val pendingTask = viewModel.pendingTasks.collectAsState(initial = null)
 
-    val tasksList = viewModel.tasks.value.collectAsState(initial = null)
+    val tasksList = viewModel.tasks
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -186,7 +189,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                 )
             }
         }
-        items(tasksList.value.orEmpty()) {
+        items(tasksList.value) {
             TaskCard(taskTitle = it.title, timeFrom = it.timeFrom, timeTo = it.timeTo, tag = null)
         }
     }

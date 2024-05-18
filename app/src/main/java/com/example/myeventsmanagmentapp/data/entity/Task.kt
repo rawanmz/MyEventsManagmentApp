@@ -1,10 +1,16 @@
 package com.example.myeventsmanagmentapp.data.entity
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.myeventsmanagmentapp.getIconName
 import com.example.myeventsmanagmentapp.ui.theme.LightBlue
 import com.example.myeventsmanagmentapp.ui.theme.LightGreen
 import com.example.myeventsmanagmentapp.ui.theme.LightPurple
@@ -31,9 +37,9 @@ data class Task(
     val tagName: String = ""
 )
 
-enum class TaskType(val type: String, val color: String) {
-    Pending("Pending", LightPurple.toArgb().toString()),
-    OnGoing("On Going", LightGreen.toArgb().toString()),
-    Cancelled("Cancelled", LightRed.toArgb().toString()),
-    Completed("Completed", LightBlue.toArgb().toString())
+enum class TaskType(val type: String, val color: String, val icon: String) {
+    Pending("Pending", LightPurple.toArgb().toString(), getIconName(Icons.Outlined.DateRange)),
+    OnGoing("On Going", LightGreen.toArgb().toString(), getIconName(Icons.Outlined.Build)),
+    Cancelled("Cancelled", LightRed.toArgb().toString(), getIconName(Icons.Outlined.Delete)),
+    Completed("Completed", LightBlue.toArgb().toString(), getIconName(Icons.Outlined.Done))
 }

@@ -10,7 +10,7 @@ import com.example.myeventsmanagmentapp.data.dao.TaskDao
 import com.example.myeventsmanagmentapp.data.entity.Tags
 import com.example.myeventsmanagmentapp.data.entity.Task
 
-@Database(entities = [Task::class, Tags::class], version = 1, exportSchema = false)
+@Database(entities = [Task::class, Tags::class], version = 2, exportSchema = false)
 abstract class EventsDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TaskDao
@@ -26,13 +26,12 @@ abstract class EventsDatabase : RoomDatabase() {
             // if it is, then create the database
 
 
-//            val MIGRATION_1_2 = object : Migration(1, 2) {
-//
-//                override fun migrate(db: SupportSQLiteDatabase) {
-//                    db.execSQL("ALTER TABLE tags_table ADD COLUMN tag_border TEXT NOT NULL DEFAULT ''")
-//                }
-//            }
+            val MIGRATION_1_2 = object : Migration(1, 2) {
 
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    db.execSQL("ALTER TABLE tags_table ADD COLUMN icon_name TEXT NOT NULL DEFAULT ''")
+                }
+            }
 
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -40,8 +39,8 @@ abstract class EventsDatabase : RoomDatabase() {
                     EventsDatabase::class.java,
                     "events_database"
                 )
-                   //.addMigrations()
-                   .fallbackToDestructiveMigration().build()
+                    .addMigrations(MIGRATION_1_2)
+                    .fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 // return instance
                 instance
