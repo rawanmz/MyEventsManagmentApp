@@ -72,12 +72,11 @@ class MainActivity : ComponentActivity() {
                                 containerColor = Color.Red.copy(0.5f)
                             ) {
                                 Text(
-//                                modifier = Modifier.matchParentSize(),
                                     text = authViewModel.error.value
                                 )
                             }
                         }
-                        EventsAppNavigation(authViewModel,navController)
+                        EventsAppNavigation(authViewModel, navController)
                     }
                     if(showBottomBar) {
                         BottomBar(navController)

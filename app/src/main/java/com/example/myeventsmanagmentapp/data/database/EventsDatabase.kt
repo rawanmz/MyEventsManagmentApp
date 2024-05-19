@@ -9,8 +9,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.myeventsmanagmentapp.data.dao.TaskDao
 import com.example.myeventsmanagmentapp.data.entity.Tags
 import com.example.myeventsmanagmentapp.data.entity.Task
+import com.example.myeventsmanagmentapp.data.entity.TaskTagCrossRef
 
-@Database(entities = [Task::class, Tags::class], version = 2, exportSchema = false)
+@Database(entities = [Task::class, Tags::class, TaskTagCrossRef::class], version = 3, exportSchema = false)
 abstract class EventsDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TaskDao
@@ -33,13 +34,25 @@ abstract class EventsDatabase : RoomDatabase() {
                 }
             }
 
+            val MIGRATION_2_3 = object : Migration(2, 3) {
+
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    db.execSQL(
+                        "CREATE TABLE IF NOT EXISTS `TaskTagCrossRef` (" +
+                                "`task_Id` INTEGER NOT NULL, " +
+                                "`tag_name` TEXT NOT NULL, " +
+                                "PRIMARY KEY(`task_Id`, `tag_name`) )"
+                    )
+                }
+            }
+
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     EventsDatabase::class.java,
                     "events_database"
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 // return instance

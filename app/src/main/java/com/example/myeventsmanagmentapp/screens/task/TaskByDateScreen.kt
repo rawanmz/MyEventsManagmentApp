@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,8 +34,12 @@ import java.time.LocalDate
 
 @Composable
 fun TaskByDateScreen(viewmodel: TaskViewModel) {
-    val tasks = viewmodel.tasks.value
-    val tag = viewmodel.tags.collectAsState(null).value
+    val tasks = viewmodel.taskWithTags
+
+    LaunchedEffect(Unit) {
+        viewmodel.sortTasksByDate(LocalDate.now().toString())
+
+    }
     var selectedDate by remember {
         mutableStateOf(LocalDate.now().toString())
     }
@@ -62,7 +66,7 @@ fun TaskByDateScreen(viewmodel: TaskViewModel) {
                 .padding(bottom = 100.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            val groupedList = tasks.groupBy { it.timeFrom }
+            val groupedList = tasks.value.groupBy { it.task.timeFrom }
             if (groupedList.isNotEmpty()) {
                 groupedList.forEach {
                     item {
@@ -76,14 +80,14 @@ fun TaskByDateScreen(viewmodel: TaskViewModel) {
                             item {
                                 Text(text = it.key.orEmpty())
                             }
-                            items(it.value) { task ->
+                            items(it.value) { taskWithTags ->
                                 Box(modifier = Modifier.fillParentMaxWidth(0.6f)) {
-//                                    TaskCard(
-//                                        taskTitle = task.title,
-//                                        task.timeFrom,
-//                                        task.timeTo,
-//                                        tag?.find { it.name == task.tagName }
-//                                    )
+                                    TaskCard(
+                                        taskTitle = taskWithTags.task.title,
+                                        taskWithTags.task.timeFrom,
+                                        taskWithTags.task.timeTo,
+                                        taskWithTags.tags
+                                    )
                                 }
                             }
                         }

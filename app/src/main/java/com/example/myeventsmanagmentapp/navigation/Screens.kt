@@ -19,9 +19,8 @@ sealed class Screens(val route: String) {
         data object CategoryScreen : Screens("category_screen")
         data object StaticsScreen : Screens("Statics_screen")
         data object DateDialog: Screens("DateDialog")
-        data object TimeDialog: Screens("TimeDialog")
-
-
+        data object AddTagDialog: Screens("AddTagDialog")
+        data object TaskByCategory: Screens("TaskByCategory")
 
     }
     data object Authentication : Screens("authGraph") {

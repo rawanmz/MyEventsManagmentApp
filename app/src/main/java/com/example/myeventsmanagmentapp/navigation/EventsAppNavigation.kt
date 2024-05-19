@@ -3,8 +3,6 @@ package com.example.myeventsmanagmentapp.navigation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,20 +13,25 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.myeventsmanagmentapp.component.MonthlyHorizontalCalendarView
 import com.example.myeventsmanagmentapp.screens.auth.AuthViewModel
 import com.example.myeventsmanagmentapp.screens.auth.LoginScreen
 import com.example.myeventsmanagmentapp.screens.auth.SignUpScreen
 import com.example.myeventsmanagmentapp.screens.auth.SplashScreen
+import com.example.myeventsmanagmentapp.screens.task.AddTagDialog
 import com.example.myeventsmanagmentapp.screens.task.AddTaskScreen
 import com.example.myeventsmanagmentapp.screens.task.AddTaskViewModel
+import com.example.myeventsmanagmentapp.screens.task.CategoryScreen
 import com.example.myeventsmanagmentapp.screens.task.HomeScreen
 import com.example.myeventsmanagmentapp.screens.task.TaskByDateScreen
 import com.example.myeventsmanagmentapp.screens.task.TaskViewModel
+import com.example.myeventsmanagmentapp.screens.task.TasksByCategory
 import com.google.firebase.auth.FirebaseUser
 
 
@@ -91,17 +94,8 @@ fun NavGraphBuilder.mainAppNavigation(
             TaskByDateScreen(viewmodel)
         }
         composable(Screens.MainApp.CategoryScreen.route) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Red)
-            ) {
-                Button(onClick = {
-                    logout.invoke()
-                }) {
-                    Text(text = "SignOut")
-                }
-            }
+            val taskViewModel: TaskViewModel = hiltViewModel()
+            CategoryScreen(userName.invoke(), taskViewModel, navController, logout)
         }
         composable(Screens.MainApp.AddScreen.route) {
             val viewmodel: AddTaskViewModel = hiltViewModel()
@@ -129,18 +123,28 @@ fun NavGraphBuilder.mainAppNavigation(
                 navController.popBackStack()
             }
         }
-//        dialog(Screens.MainApp.TimeDialog.route, dialogProperties = DialogProperties(
-//            dismissOnClickOutside = true,
-//            dismissOnBackPress = true
-//        )) {
-//            TimePickerDialog(navController, onBackPress = {
-//                navController.popBackStack()
-//            }, onTimeSelected ={ hour, minute ->
-//                "$hour:$minute"
-//            })
-//        }
-
-
+        dialog(
+            Screens.MainApp.AddTagDialog.route, dialogProperties = DialogProperties(
+                dismissOnClickOutside = true,
+                dismissOnBackPress = true
+            )
+        ) {
+            val addTaskViewModel: AddTaskViewModel = hiltViewModel()
+            AddTagDialog(navController, addTaskViewModel)
+        }
+        composable("${Screens.MainApp.TaskByCategory.route}/{tagName}", arguments = listOf(
+            navArgument("tagName") {
+                type = NavType.StringType
+            }
+        )) { navArgument ->
+            val taskViewModel: TaskViewModel = hiltViewModel()
+            val tagWithTaskLists = taskViewModel.tagWithTasks.value.firstOrNull {
+                it.tag.name == navArgument.arguments?.getString(
+                    "tagName"
+                ).orEmpty()
+            }
+            TasksByCategory(tagWithTaskLists, navController)
+        }
     }
 }
 

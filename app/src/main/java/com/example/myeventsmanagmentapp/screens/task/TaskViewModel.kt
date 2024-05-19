@@ -1,25 +1,15 @@
 package com.example.myeventsmanagmentapp.screens.task
 
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myeventsmanagmentapp.data.entity.TagWithTaskLists
 import com.example.myeventsmanagmentapp.data.entity.Tags
 import com.example.myeventsmanagmentapp.data.entity.Task
 import com.example.myeventsmanagmentapp.data.entity.TaskType
-import com.example.myeventsmanagmentapp.data.entity.TaskWithTagLists
+import com.example.myeventsmanagmentapp.data.entity.TaskWithTags
 import com.example.myeventsmanagmentapp.data.repository.TaskRepository
-import com.example.myeventsmanagmentapp.getIconName
-import com.example.myeventsmanagmentapp.iconByName
-import com.example.myeventsmanagmentapp.ui.theme.LightBlue
-import com.example.myeventsmanagmentapp.ui.theme.LightGreen
-import com.example.myeventsmanagmentapp.ui.theme.LightOrange
-import com.example.myeventsmanagmentapp.ui.theme.LightPurple
-import com.example.myeventsmanagmentapp.ui.theme.LightRed
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,10 +20,13 @@ class TaskViewModel @Inject constructor(
     val tasks = mutableStateOf<List<Task>>(emptyList())
 
     val tags = taskRepository.getAllTags()
-    val cancelledTasks = taskRepository.getTagsWithTask(TaskType.Cancelled.type)
-    val pendingTasks = taskRepository.getTagsWithTask(TaskType.Pending.type)
-    val completedTasks = taskRepository.getTagsWithTask(TaskType.Completed.type)
-    val onGoingTasks = taskRepository.getTagsWithTask(TaskType.OnGoing.type)
+    val cancelledTasks = taskRepository.getTagWithTasksList(TaskType.Cancelled.type)
+    val pendingTasks = taskRepository.getTagWithTasksList(TaskType.Pending.type)
+    val completedTasks = taskRepository.getTagWithTasksList(TaskType.Completed.type)
+    val onGoingTasks = taskRepository.getTagWithTasksList(TaskType.OnGoing.type)
+
+    val tagWithTasks = mutableStateOf<List<TagWithTaskLists>>(emptyList())
+    val taskWithTags =  mutableStateOf<List<TaskWithTags>> (emptyList())
 
     init {
         //add base tags
@@ -43,13 +36,22 @@ class TaskViewModel @Inject constructor(
             }
             taskRepository.insertTagList(tagsList)
         }
+        getTagWithTaskLists()
 
     }
 
     fun sortTasksByDate(date: String) {
         viewModelScope.launch {
             taskRepository.sortTasksByDate(date).collect {
-                tasks.value = it
+                taskWithTags.value = it
+            }
+        }
+    }
+
+    private fun getTagWithTaskLists() {
+        viewModelScope.launch {
+            taskRepository.getTagWithTaskLists().collect{
+                tagWithTasks.value =it
             }
         }
     }

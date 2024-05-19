@@ -90,8 +90,8 @@ fun AddTaskScreen(navController: NavHostController, viewModel: AddTaskViewModel)
         }
         //tags List
         item {
-            AddTagsListView(allTags.value.orEmpty()) {
-                viewModel.category.value = it.name
+            AddTagsListView(allTags.value.orEmpty(), navController) {
+                viewModel.selectedTags.value = it
             }
         }
 
@@ -145,6 +145,5 @@ fun ButtonAddTask(addTask: AddTaskViewModel) {
             fontSize = 16.sp,
             color = Color.White
         )
-
     }
 }

@@ -79,7 +79,10 @@ fun BottomBar(navController: NavHostController) {
                                         restoreState = true
                                     }
                                 }
-                                .padding(12.dp),
+                                .padding(12.dp)
+                                .semantics {
+                                testTag = bottomNavigationItem.route
+                            },
                             tint = if (navigationSelectedItem.value == index) PrimaryColor else Color.Gray.copy(
                                 0.5f
                             )

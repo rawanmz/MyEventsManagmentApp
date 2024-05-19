@@ -39,7 +39,6 @@ import com.example.myeventsmanagmentapp.R
 import com.example.myeventsmanagmentapp.component.TaskCard
 import com.example.myeventsmanagmentapp.component.TaskCategoryCard
 import com.example.myeventsmanagmentapp.data.entity.TaskType
-import com.example.myeventsmanagmentapp.getAllSystemIcons
 import com.example.myeventsmanagmentapp.navigation.Screens
 import com.example.myeventsmanagmentapp.ui.theme.Navy
 import com.example.myeventsmanagmentapp.ui.theme.PrimaryColor
@@ -58,12 +57,13 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
     val onGoingTask = viewModel.onGoingTasks.collectAsState(initial = null)
     val pendingTask = viewModel.pendingTasks.collectAsState(initial = null)
 
-    val tasksList = viewModel.tasks
+    val tasksList = viewModel.taskWithTags
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
+            .padding(bottom = 100.dp)
             .semantics {
                 contentDescription = "Home Screen"
             }, verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -92,6 +92,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                         Color(0xFF7DC8E7),
                         height = 220.dp,
                         onClick = {
+                            navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.Completed.type}")
 
                         },
                         image = {
@@ -107,7 +108,9 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                         pendingTask.value?.first()?.tasks?.size.toString().plus("Task"),
                         Color(0xFF7D88E7),
                         height = 190.dp,
-                        onClick = {},
+                        onClick = {
+                            navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.Pending.type}")
+                        },
                         image = {
                             Icon(
                                 imageVector = Icons.TwoTone.CheckCircle,
@@ -130,7 +133,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                         Color(0xFFE77D7D),
                         height = 190.dp,
                         onClick = {
-
+                            navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.Cancelled.type}")
                         },
                         image = {
                             Icon(
@@ -147,6 +150,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                         Color(0xFF81E89E),
                         height = 220.dp,
                         onClick = {
+                            navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.OnGoing.type}")
 
                         },
                         image = {
@@ -190,7 +194,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
             }
         }
         items(tasksList.value) {
-            TaskCard(taskTitle = it.title, timeFrom = it.timeFrom, timeTo = it.timeTo, tag = null)
+            TaskCard(taskTitle = it.task.title, timeFrom = it.task.timeFrom, timeTo = it.task.timeTo, tag = it.tags)
         }
     }
 }
