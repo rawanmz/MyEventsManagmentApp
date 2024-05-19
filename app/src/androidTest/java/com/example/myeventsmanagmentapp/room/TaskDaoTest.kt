@@ -1,17 +1,22 @@
 package com.example.myeventsmanagmentapp.room
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.test.filters.SmallTest
 import com.example.myeventsmanagmentapp.data.dao.TaskDao
 import com.example.myeventsmanagmentapp.data.database.EventsDatabase
+import com.example.myeventsmanagmentapp.data.entity.TagWithTaskLists
 import com.example.myeventsmanagmentapp.data.entity.Tags
 import com.example.myeventsmanagmentapp.data.entity.Task
+import com.example.myeventsmanagmentapp.data.entity.TaskTagCrossRef
 import com.example.myeventsmanagmentapp.data.entity.TaskType
-import com.example.myeventsmanagmentapp.data.entity.TaskWithTagLists
+import com.example.myeventsmanagmentapp.getIconName
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -104,7 +109,8 @@ class TaskDaoTest {
     fun upsertTag() = runTest {
         val tag = Tags(
            "Personal",
-            "color"
+            "color",
+            getIconName(Icons.Outlined.DateRange)
         )
         taskDao.upsertTag(tag)
         val allTags = taskDao.getAllTags().first()
@@ -114,7 +120,8 @@ class TaskDaoTest {
     fun deleteTag() = runTest {
         val tag = Tags(
             "Personal",
-            "color"
+            "color",
+            getIconName(Icons.Outlined.DateRange)
         )
 
         taskDao.upsertTag(tag)
@@ -129,11 +136,13 @@ class TaskDaoTest {
     fun getAllTags() = runTest {
         val tag = Tags(
             "Personal",
-            "color"
+            "color",
+            getIconName(Icons.Outlined.DateRange)
         )
         val tag2 = Tags(
             "Work",
-            "color"
+            "color",
+            getIconName(Icons.Outlined.DateRange)
         )
         taskDao.upsertTag(tag)
         taskDao.upsertTag(tag2)
@@ -146,11 +155,13 @@ class TaskDaoTest {
 
         val tag = Tags(
             "Personal",
-            "color"
+            "color",
+            getIconName(Icons.Outlined.DateRange)
         )
         val tag2 = Tags(
             "Work",
-            "color"
+            "color",
+            getIconName(Icons.Outlined.DateRange)
         )
 
         val task = Task(
@@ -178,11 +189,16 @@ class TaskDaoTest {
         taskDao.upsertTag(tag2)
         taskDao.addTask(task)
         taskDao.addTask(task2)
+        val list = mutableListOf<TaskTagCrossRef>()
+        list.add(TaskTagCrossRef(task.taskId!!, tag2.name))
+        list.add(TaskTagCrossRef(task2.taskId!!, tag2.name))
+        taskDao.insertTaskTagCrossRefs(list)
 
+        //get data
         ///
         val getTagsWithTask = taskDao.getTagsWithTask("Work").first()
-        val expected = listOf(TaskWithTagLists(tag2,listOf(task, task2)))
-        assert(getTagsWithTask == expected)
+        val expected = listOf(TagWithTaskLists(tag2,listOf(task, task2)))
+       Assert.assertEquals(getTagsWithTask , expected)
     }
 
 
