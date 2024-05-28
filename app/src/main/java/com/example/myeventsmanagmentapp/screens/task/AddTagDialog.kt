@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,15 +38,12 @@ import com.example.myeventsmanagmentapp.ui.theme.PrimaryColor
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AddTagDialog(navController: NavHostController, addTaskViewModel: AddTaskViewModel) {
+fun AddTagDialog(navController: NavHostController, addTaskViewModel: TaskViewModel) {
     Box(
         Modifier
             .padding(16.dp)
             .background(Color.Transparent)
     ) {
-        val value = remember {
-            mutableStateOf("")
-        }
         Column(
             modifier = Modifier
                 .background(Color.White, RoundedCornerShape(16.dp))

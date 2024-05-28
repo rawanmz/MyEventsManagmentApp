@@ -18,11 +18,16 @@ sealed class Screens(val route: String) {
         data object AddScreen : Screens("add_screen")
         data object CategoryScreen : Screens("category_screen")
         data object StaticsScreen : Screens("Statics_screen")
-        data object DateDialog: Screens("DateDialog")
-        data object AddTagDialog: Screens("AddTagDialog")
-        data object TaskByCategory: Screens("TaskByCategory")
+        data object DateDialog : Screens("DateDialog")
+        data object AddTagDialog : Screens("AddTagDialog")
+        data object TaskByCategory : Screens("TaskByCategory")
+        data object UpdateTask : Screens("update_task_screen")
+        data object Settings : Screens("settings_screen")
+
+
 
     }
+
     data object Authentication : Screens("authGraph") {
         data object Splash : Screens("splash")
         data object SignUp : Screens("signup_route")
@@ -31,12 +36,12 @@ sealed class Screens(val route: String) {
 }
 
 data class BottomNavigationItem(
-    val icon : ImageVector = Icons.Filled.Home,
-    val route : String = ""
+    val icon: ImageVector = Icons.Filled.Home,
+    val route: String = ""
 ) {
 
     //function to get the list of bottomNavigationItems
-    fun bottomNavigationItems() : List<BottomNavigationItem> {
+    fun bottomNavigationItems(): List<BottomNavigationItem> {
         return listOf(
             BottomNavigationItem(
                 icon = Icons.Outlined.Home,
@@ -50,16 +55,15 @@ data class BottomNavigationItem(
                 icon = Icons.Filled.AddCircle,
                 route = Screens.MainApp.AddScreen.route
             ),
-
-            BottomNavigationItem(
-                icon = Icons.Outlined.Settings,
-                route = Screens.MainApp.CategoryScreen.route
-            ),
-
             BottomNavigationItem(
                 icon = Icons.Outlined.DateRange,
                 route = Screens.MainApp.StaticsScreen.route
             ),
+
+            BottomNavigationItem(
+                icon = Icons.Outlined.Settings,
+                route = Screens.MainApp.CategoryScreen.route
+            )
         )
     }
 }

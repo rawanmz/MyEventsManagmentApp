@@ -28,18 +28,35 @@ data class Task(
     @ColumnInfo(name = "date")
     val date: String,
     @ColumnInfo(name = "time_from")
-    val timeFrom: String? = "",
+    val timeFrom: String?,
     @ColumnInfo(name = "time_to")
-    val timeTo: String? = "",
+    val timeTo: String?,
     @ColumnInfo(name = "task_type")
     val taskType: String,
     @ColumnInfo(name = "task_tag_name")
     val tagName: String = ""
 )
 
-enum class TaskType(val type: String, val color: String, val icon: String) {
+enum class TaskType(
+    val type: String,
+    val color: String,
+    val icon: String,
+    val isSelected: Boolean? = false
+) {
     Pending("Pending", LightPurple.toArgb().toString(), getIconName(Icons.Outlined.DateRange)),
     OnGoing("On Going", LightGreen.toArgb().toString(), getIconName(Icons.Outlined.Build)),
     Cancelled("Cancelled", LightRed.toArgb().toString(), getIconName(Icons.Outlined.Delete)),
     Completed("Completed", LightBlue.toArgb().toString(), getIconName(Icons.Outlined.Done)),
 }
+
+
+data class SearchResults(
+    val taskResults: List<TaskWithTags>,
+    val tagResults: List<TagWithTaskLists>
+)
+
+
+data class AggregatedData(
+    val date: String,
+    val totalDuration: Int
+)

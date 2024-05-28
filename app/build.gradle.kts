@@ -139,4 +139,9 @@ dependencies {
     implementation("com.kizitonwose.calendar:compose:2.5.1")
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
 
+
+    implementation("com.patrykandpatrick.vico:compose:2.0.0-alpha.20")
+    implementation("com.patrykandpatrick.vico:compose-m3:2.0.0-alpha.20")
+    implementation("com.patrykandpatrick.vico:core:2.0.0-alpha.20")
+
 }

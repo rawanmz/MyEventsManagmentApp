@@ -1,13 +1,16 @@
 package com.example.myeventsmanagmentapp.navigation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -26,13 +29,21 @@ import com.example.myeventsmanagmentapp.screens.auth.SignUpScreen
 import com.example.myeventsmanagmentapp.screens.auth.SplashScreen
 import com.example.myeventsmanagmentapp.screens.task.AddTagDialog
 import com.example.myeventsmanagmentapp.screens.task.AddTaskScreen
-import com.example.myeventsmanagmentapp.screens.task.AddTaskViewModel
 import com.example.myeventsmanagmentapp.screens.task.CategoryScreen
+import com.example.myeventsmanagmentapp.screens.task.ComposeChart10
+import com.example.myeventsmanagmentapp.screens.task.ComposeChart7
 import com.example.myeventsmanagmentapp.screens.task.HomeScreen
+import com.example.myeventsmanagmentapp.screens.task.SettingsScreen
 import com.example.myeventsmanagmentapp.screens.task.TaskByDateScreen
 import com.example.myeventsmanagmentapp.screens.task.TaskViewModel
 import com.example.myeventsmanagmentapp.screens.task.TasksByCategory
+import com.example.myeventsmanagmentapp.screens.task.UpdateTaskScreen
 import com.google.firebase.auth.FirebaseUser
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 
 @Composable
@@ -41,6 +52,7 @@ fun EventsAppNavigation(
     navController: NavHostController
 ) {
     val context = LocalContext.current
+
     NavHost(
         navController = navController,
         startDestination = authViewModel.isSignedIn.value,
@@ -80,6 +92,7 @@ fun NavGraphBuilder.mainAppNavigation(
     logout: () -> Unit,
     userName: () -> FirebaseUser?
 ) {
+
     navigation(
         startDestination = Screens.MainApp.Home.route,
         route = Screens.MainApp.route,
@@ -91,25 +104,48 @@ fun NavGraphBuilder.mainAppNavigation(
 
         composable(Screens.MainApp.TaskByDate.route) {
             val viewmodel: TaskViewModel = hiltViewModel()
-            TaskByDateScreen(viewmodel)
+            TaskByDateScreen(viewmodel, navController)
         }
         composable(Screens.MainApp.CategoryScreen.route) {
             val taskViewModel: TaskViewModel = hiltViewModel()
             CategoryScreen(userName.invoke(), taskViewModel, navController, logout)
         }
-        composable(Screens.MainApp.AddScreen.route) {
-            val viewmodel: AddTaskViewModel = hiltViewModel()
+        composable(
+            Screens.MainApp.AddScreen.route
+        ) {
+            val viewmodel: TaskViewModel = hiltViewModel()
             viewmodel.taskDate.value = it.savedStateHandle.get<String>("selectedDate").orEmpty()
 
             AddTaskScreen(navController, viewmodel)
         }
         composable(Screens.MainApp.StaticsScreen.route) {
-            Column(
+            val viewmodel: TaskViewModel = hiltViewModel()
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Green)
             ) {
+                item {
+                    val modelProducer = remember { CartesianChartModelProducer.build() }
 
+                    val x = (1..50).toList()
+                    LaunchedEffect(Unit) {
+                        withContext(Dispatchers.Default) {
+                            modelProducer.tryRunTransaction {
+                                lineSeries {
+                                    series(
+                                        x,
+                                        x.map { Random.nextFloat() * 15 })
+                                }
+                            }
+                        }
+                    }
+
+                    val tags = viewmodel.allTags.collectAsState()
+
+
+                    ComposeChart7(tags.value, modelProducer, Modifier.size(300.dp))
+                    ComposeChart10(Modifier.size(300.dp))
+                }
             }
         }
         dialog(
@@ -129,7 +165,7 @@ fun NavGraphBuilder.mainAppNavigation(
                 dismissOnBackPress = true
             )
         ) {
-            val addTaskViewModel: AddTaskViewModel = hiltViewModel()
+            val addTaskViewModel: TaskViewModel = hiltViewModel()
             AddTagDialog(navController, addTaskViewModel)
         }
         composable("${Screens.MainApp.TaskByCategory.route}/{tagName}", arguments = listOf(
@@ -138,12 +174,24 @@ fun NavGraphBuilder.mainAppNavigation(
             }
         )) { navArgument ->
             val taskViewModel: TaskViewModel = hiltViewModel()
-            val tagWithTaskLists = taskViewModel.tagWithTasks.value.firstOrNull {
-                it.tag.name == navArgument.arguments?.getString(
-                    "tagName"
-                ).orEmpty()
-            }
-            TasksByCategory(tagWithTaskLists, navController)
+
+            TasksByCategory(
+                navController, taskViewModel, navArgument.arguments?.getString("tagName")
+            )
+        }
+        composable(
+            "${Screens.MainApp.UpdateTask.route}/{taskId}", arguments =
+            listOf(navArgument("taskId") {
+                type = NavType.LongType
+            })
+        ) {
+            val viewmodel: TaskViewModel = hiltViewModel()
+
+            UpdateTaskScreen(navController, viewmodel, it.arguments?.getLong("taskId"), it)
+        }
+
+        composable(Screens.MainApp.Settings.route){
+            SettingsScreen(navController)
         }
     }
 }

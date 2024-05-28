@@ -30,7 +30,8 @@ fun CategoryScreen(
     val tagsWithTasksList = viewModel.tagWithTasks
 
     Column {
-        UserImageWithEmail(user = user)
+        UserImageWithEmail(user = user, navController, logout)
+
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxWidth()

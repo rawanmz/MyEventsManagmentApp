@@ -1,6 +1,7 @@
 package com.example.myeventsmanagmentapp.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialogDefaults.containerColor
@@ -9,8 +10,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -27,6 +30,8 @@ fun CustomTextField(
     isReadOnly: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
+    var isTitleValid by remember { mutableStateOf(true) }
+
     Column(modifier = modifier.padding(vertical = 12.dp)) {
         Text(
             label,
@@ -49,7 +54,10 @@ fun CustomTextField(
             value = value.value,
             onValueChange = {
                 value.value = it
-            })
+                isTitleValid = it.isNotBlank() // Validate if the title is not empty
+            },
+            isError = !isTitleValid,
+            )
     }
 }
 
@@ -59,6 +67,9 @@ fun CustomTextFieldPreview() {
     val state = remember {
         mutableStateOf("")
     }
-    CustomTextField(modifier = Modifier, "Username", Color.Gray, state)
+    Row(Modifier.fillMaxWidth()) {
+        CustomTextField(modifier = Modifier.weight(1f), "Username", Color.Gray, state)
+        CustomTextField(modifier = Modifier.weight(1f), "Username", Color.Gray, state)
+    }
 
 }
