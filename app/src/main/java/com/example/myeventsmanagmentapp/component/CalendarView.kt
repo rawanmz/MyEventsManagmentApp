@@ -186,7 +186,8 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
             Text(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()).dropLast(1),
+                //todo take it from store pref
+                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.forLanguageTag("en")).dropLast(1),
                 color = Color.Black,
                 fontSize = 14.sp
             )

@@ -144,4 +144,7 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose-m3:2.0.0-alpha.20")
     implementation("com.patrykandpatrick.vico:core:2.0.0-alpha.20")
 
+    //widget
+    implementation("androidx.glance:glance-appwidget:1.0.0")
+
 }

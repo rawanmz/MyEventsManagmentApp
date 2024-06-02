@@ -1,7 +1,8 @@
 package com.example.myeventsmanagmentapp.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,8 +31,8 @@ import com.example.myeventsmanagmentapp.screens.auth.SplashScreen
 import com.example.myeventsmanagmentapp.screens.task.AddTagDialog
 import com.example.myeventsmanagmentapp.screens.task.AddTaskScreen
 import com.example.myeventsmanagmentapp.screens.task.CategoryScreen
-import com.example.myeventsmanagmentapp.screens.task.ComposeChart10
-import com.example.myeventsmanagmentapp.screens.task.ComposeChart7
+import com.example.myeventsmanagmentapp.screens.task.Chart5
+import com.example.myeventsmanagmentapp.screens.task.Chart6
 import com.example.myeventsmanagmentapp.screens.task.HomeScreen
 import com.example.myeventsmanagmentapp.screens.task.SettingsScreen
 import com.example.myeventsmanagmentapp.screens.task.TaskByDateScreen
@@ -140,11 +141,8 @@ fun NavGraphBuilder.mainAppNavigation(
                         }
                     }
 
-                    val tags = viewmodel.allTags.collectAsState()
-
-
-                    ComposeChart7(tags.value, modelProducer, Modifier.size(300.dp))
-                    ComposeChart10(Modifier.size(300.dp))
+                    Chart6(modifier = Modifier.fillMaxWidth().height( 300.dp), viewmodel)
+                    Chart5(modifier = Modifier.fillMaxWidth().height( 300.dp), viewmodel)
                 }
             }
         }

@@ -9,7 +9,9 @@ import com.example.myeventsmanagmentapp.data.entity.TaskTagCrossRef
 import com.example.myeventsmanagmentapp.data.entity.TaskWithTags
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TaskRepository @Inject constructor(
     private val taskDao: TaskDao
 ) {
@@ -63,4 +65,6 @@ class TaskRepository @Inject constructor(
     suspend fun getAllTasksWithTags(): List<TaskWithTags> {
         return taskDao.getAllTasksWithTags()
     }
+
+    fun getTasksWithTagsByDayOfCurrentWeek() = taskDao.getTasksWithTagsByDayOfCurrentWeek()
 }

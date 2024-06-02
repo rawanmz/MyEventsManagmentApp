@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-    private val taskRepository: TaskRepository
+     val taskRepository: TaskRepository
 ) : ViewModel() {
 
     val cancelledTasks = taskRepository.getTagWithTasksList(TaskType.Cancelled.type)
@@ -46,7 +46,7 @@ class TaskViewModel @Inject constructor(
     val selectedTags = mutableStateOf<List<Tags>>(emptyList())
 
     var allTags: MutableStateFlow<List<Tags>> = MutableStateFlow(emptyList())
-
+    val taskInWeek = taskRepository.getTasksWithTagsByDayOfCurrentWeek()
     init {
         //add base tags
         viewModelScope.launch {

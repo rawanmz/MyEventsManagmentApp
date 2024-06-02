@@ -99,4 +99,12 @@ interface TaskDao {
     @Transaction
     @Query("SELECT * FROM task_table")
     suspend fun getAllTasksWithTags(): List<TaskWithTags>
+
+    // Function to get tasks with tags for each day of the current week
+    @Query("""
+        SELECT strftime('%Y-%m-%d', date) AS day, * FROM task_table
+        WHERE strftime('%Y-%W', date) = strftime('%Y-%W', 'now')
+        ORDER BY day
+    """)
+    fun getTasksWithTagsByDayOfCurrentWeek(): Flow<List<TaskWithTags>>
 }
