@@ -4,6 +4,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.myeventsmanagmentapp.ui.theme.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 fun iconByName(name: String): ImageVector {
     try {
@@ -57,3 +61,15 @@ fun getAllColors() = listOf(
     PrimaryColor,
     LightOrange,
 )
+
+
+fun formatDateToDay(dateString: String, inputPattern: String = "yyyy-MM-dd"): String {
+    // Parse the date string to LocalDate
+    val formatter = DateTimeFormatter.ofPattern(inputPattern)
+    val date = LocalDate.parse(dateString, formatter)
+
+    // Format to day of the week
+    val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+
+    return dayOfWeek
+}

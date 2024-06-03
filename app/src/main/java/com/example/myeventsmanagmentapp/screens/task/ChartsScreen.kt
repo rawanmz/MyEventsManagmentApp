@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.myeventsmanagmentapp.formatDateToDay
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
@@ -37,6 +38,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import com.example.myeventsmanagmentapp.ui.theme.LightBlue
 import com.example.myeventsmanagmentapp.ui.theme.LightGreen
+import com.example.myeventsmanagmentapp.ui.theme.LightPurple
+import com.example.myeventsmanagmentapp.ui.theme.LightRed
 import com.example.myeventsmanagmentapp.ui.theme.PrimaryColor
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
@@ -136,14 +139,14 @@ internal fun Chart6(
         withContext(Dispatchers.Default) {
             while (isActive) {
                 modelProducer.tryRunTransaction {
-
-                    columnSeries {
-                        val groupedByDate = data.value?.groupBy { it.task.date }
-                        repeat(1){//groupedByDate?.size?:0) {
+                    val groupedByDate = data.value?.groupBy { it.task.date }
+                    if (groupedByDate?.values?.isNotEmpty() == true) {
+                        columnSeries {
+                            repeat(1) {//groupedByDate?.size?:0) {
                                 series(
-                                   groupedByDate?.values?.map { it.size }?: listOf(1,1,1)
+                                    groupedByDate.values.map { it.size } ?: listOf(1, 1, 1)
                                 )
-
+                            }
                         }
                     }
                 }
@@ -152,51 +155,52 @@ internal fun Chart6(
     }
 
 
-    val groupedByDate = data.value?.groupBy { it.task.date }
+    val groupedByDate = data.value?.groupBy { formatDateToDay(it.task.date) }
 
     groupedByDate?.keys?.let { ComposeChart6(modelProducer, modifier, it) }
 
 }
-    @Composable
-    fun ComposeChart6(
-        modelProducer: CartesianChartModelProducer,
-        modifier: Modifier,
-        keys: Set<String>,
-    ) {
-        val horizontalBox = rememberHorizontalBox()
-        val bottomAxisValueFormatter = CartesianValueFormatter { x, _, _ ->
-
-            keys.toList()[x.toInt() % keys.size]
-        }
-        val shape = remember { Shape.cut(topLeftPercent = 50) }
-        CartesianChartHost(
-            chart =
-            rememberCartesianChart(
-                rememberColumnCartesianLayer(
-                    ColumnCartesianLayer.ColumnProvider.series(
-                        columnColors.map {
-                            rememberLineComponent(
-                                color = it,
-                                thickness = 8.dp,
-                                shape = shape
-                            )
-                        },
-                    ),
-                ),
-                startAxis = rememberStartAxis(),
-                bottomAxis = rememberBottomAxis(valueFormatter = bottomAxisValueFormatter),
-                decorations = remember(horizontalBox) { listOf(horizontalBox) },
-            ),
-            modelProducer = modelProducer,
-            modifier = modifier,
-            marker = rememberMarker(),
-            runInitialAnimation = false,
-            zoomState = rememberVicoZoomState(zoomEnabled = false),
-        )
-    }
 
 @Composable
- fun Chart5(
+fun ComposeChart6(
+    modelProducer: CartesianChartModelProducer,
+    modifier: Modifier,
+    keys: Set<String>,
+) {
+    val horizontalBox = rememberHorizontalBox()
+    val bottomAxisValueFormatter = CartesianValueFormatter { x, _, _ ->
+
+        keys.toList()[x.toInt() % keys.size]
+    }
+    val shape = remember { Shape.cut(topLeftPercent = 50) }
+    CartesianChartHost(
+        chart =
+        rememberCartesianChart(
+            rememberColumnCartesianLayer(
+                ColumnCartesianLayer.ColumnProvider.series(
+                    columnColors.map {
+                        rememberLineComponent(
+                            color = it,
+                            thickness = 8.dp,
+                            shape = shape
+                        )
+                    },
+                ),
+            ),
+            startAxis = rememberStartAxis(),
+            bottomAxis = rememberBottomAxis(valueFormatter = bottomAxisValueFormatter),
+            decorations = remember(horizontalBox) { listOf(horizontalBox) },
+        ),
+        modelProducer = modelProducer,
+        modifier = modifier,
+        marker = rememberMarker(),
+        runInitialAnimation = false,
+        zoomState = rememberVicoZoomState(zoomEnabled = false),
+    )
+}
+
+@Composable
+fun Chart5(
     modifier: Modifier,
     viewmodel: TaskViewModel,
 ) {
@@ -207,25 +211,16 @@ internal fun Chart6(
         withContext(Dispatchers.Default) {
             while (isActive) {
                 modelProducer.tryRunTransaction {
-                    columnSeries {
-                        val groupedByDate = data.value?.groupBy { it.task.date }
-                        repeat(3){//groupedByDate?.size?:0) {
+                    val groupedByDate = data.value?.groupBy { it.task.date }
+                    if (groupedByDate?.values?.isNotEmpty() == true) {
+                        columnSeries {
+                        repeat(3) {//groupedByDate?.size?:0) {
                             series(
-                                groupedByDate?.values?.map { it.size }?: listOf(1,1,1)
+                                groupedByDate.values.map { it.size } ?: listOf(1, 1, 1)
                             )
-
+                        }
                         }
                     }
-//                    columnSeries {
-//                        repeat(3) {
-//                            series(
-//                                List(Defaults.ENTRY_COUNT) {
-//                                    Defaults.COLUMN_LAYER_MIN_Y +
-//                                            Random.nextFloat() * Defaults.COLUMN_LAYER_RELATIVE_MAX_Y
-//                                },
-//                            )
-//                        }
-//                    }
                 }
             }
         }
@@ -252,7 +247,7 @@ private fun ComposeChart5(
                 columnProvider =
                 ColumnCartesianLayer.ColumnProvider.series(
                     rememberLineComponent(
-                        color = color1,
+                        color = LightGreen,
                         thickness = COLUMN_THICKNESS_DP.dp,
                         shape =
                         Shape.rounded(
@@ -261,11 +256,11 @@ private fun ComposeChart5(
                         ),
                     ),
                     rememberLineComponent(
-                        color = color2,
+                        color = LightRed,
                         thickness = COLUMN_THICKNESS_DP.dp,
                     ),
                     rememberLineComponent(
-                        color = color3,
+                        color = LightPurple,
                         thickness = COLUMN_THICKNESS_DP.dp,
                         shape =
                         Shape.rounded(
@@ -297,42 +292,26 @@ private const val COLUMN_ROUNDNESS_PERCENT: Int = 40
 private const val COLUMN_THICKNESS_DP: Int = 10
 private const val AXIS_LABEL_ROTATION_DEGREES = 45f
 
-private val color1 = Color(0xff6438a7)
-private val color2 = Color(0xff3490de)
-private val color3 = Color(0xff73e8dc)
+
 private val startAxisItemPlacer = AxisItemPlacer.Vertical.count({ 3 })
 
-    @Composable
-    private fun rememberHorizontalBox() =
-        com.patrykandpatrick.vico.compose.cartesian.decoration.rememberHorizontalBox(
-            y = { 7f..14f },
-            box = rememberShapeComponent(color = horizontalBoxColor.copy(.36f)),
-            labelComponent =
-            rememberTextComponent(
-                color = Color.Black,
-                background = rememberShapeComponent(
-                    Shape.Rectangle,
-                    horizontalBoxColor
-                ),
-                padding = Dimensions.of(8.dp, 2.dp),
-                margins = Dimensions.of(4.dp),
-                typeface = Typeface.MONOSPACE,
+@Composable
+private fun rememberHorizontalBox() =
+    com.patrykandpatrick.vico.compose.cartesian.decoration.rememberHorizontalBox(
+        y = { 7f..14f },
+        box = rememberShapeComponent(color = horizontalBoxColor.copy(.36f)),
+        labelComponent =
+        rememberTextComponent(
+            color = Color.Black,
+            background = rememberShapeComponent(
+                Shape.Rectangle,
+                horizontalBoxColor
             ),
-        )
+            padding = Dimensions.of(8.dp, 2.dp),
+            margins = Dimensions.of(4.dp),
+            typeface = Typeface.MONOSPACE,
+        ),
+    )
 
-    private val columnColors = listOf(PrimaryColor, LightGreen, LightBlue)
-    private val horizontalBoxColor = Color(0xffe9e5af)
-    private val daysOfWeek = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-//    private val bottomAxisValueFormatter = CartesianValueFormatter { x, _, _ ->
-//
-//        daysOfWeek[x.toInt() % daysOfWeek.size]
-//    }
-
-//    object Defaults {
-//        const val TRANSACTION_INTERVAL_MS = 5000L
-//        const val MULTI_SERIES_COUNT = 1
-//        const val ENTRY_COUNT = 7
-//        const val MAX_Y = 50
-//        const val COLUMN_LAYER_MIN_Y = 4
-//        const val COLUMN_LAYER_RELATIVE_MAX_Y = MAX_Y - COLUMN_LAYER_MIN_Y
-//    }
+private val columnColors = listOf(PrimaryColor, LightGreen, LightBlue)
+private val horizontalBoxColor = Color(0xffe9e5af)
