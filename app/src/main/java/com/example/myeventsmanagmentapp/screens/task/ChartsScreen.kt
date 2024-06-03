@@ -127,11 +127,10 @@ private const val CLIPPING_FREE_SHADOW_RADIUS_MULTIPLIER = 1.4f
 
 
 @Composable
-internal fun Chart6(
+internal fun CurrentWeekTask(
     modifier: Modifier,
     viewModel: TaskViewModel,
 ) {
-
     val data = viewModel.taskInWeek.collectAsState(initial = null)
 
     val modelProducer = remember { CartesianChartModelProducer.build() }
@@ -144,7 +143,7 @@ internal fun Chart6(
                         columnSeries {
                             repeat(1) {//groupedByDate?.size?:0) {
                                 series(
-                                    groupedByDate.values.map { it.size } ?: listOf(1, 1, 1)
+                                    groupedByDate.values.map { it.size }
                                 )
                             }
                         }
@@ -156,13 +155,12 @@ internal fun Chart6(
 
 
     val groupedByDate = data.value?.groupBy { formatDateToDay(it.task.date) }
-
-    groupedByDate?.keys?.let { ComposeChart6(modelProducer, modifier, it) }
+    groupedByDate?.keys?.let { CurrentWeekTaskChart(modelProducer, modifier, it) }
 
 }
 
 @Composable
-fun ComposeChart6(
+fun CurrentWeekTaskChart(
     modelProducer: CartesianChartModelProducer,
     modifier: Modifier,
     keys: Set<String>,
@@ -212,6 +210,10 @@ fun Chart5(
             while (isActive) {
                 modelProducer.tryRunTransaction {
                     val groupedByDate = data.value?.groupBy { it.task.date }
+
+                   val x= groupedByDate?.values?.flatMap {
+                        it.map { it.tags.size }
+                    }
                     if (groupedByDate?.values?.isNotEmpty() == true) {
                         columnSeries {
                         repeat(3) {//groupedByDate?.size?:0) {

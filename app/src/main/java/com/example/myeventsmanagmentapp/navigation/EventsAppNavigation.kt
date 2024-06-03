@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,7 +31,7 @@ import com.example.myeventsmanagmentapp.screens.task.AddTagDialog
 import com.example.myeventsmanagmentapp.screens.task.AddTaskScreen
 import com.example.myeventsmanagmentapp.screens.task.CategoryScreen
 import com.example.myeventsmanagmentapp.screens.task.Chart5
-import com.example.myeventsmanagmentapp.screens.task.Chart6
+import com.example.myeventsmanagmentapp.screens.task.CurrentWeekTask
 import com.example.myeventsmanagmentapp.screens.task.HomeScreen
 import com.example.myeventsmanagmentapp.screens.task.SettingsScreen
 import com.example.myeventsmanagmentapp.screens.task.TaskByDateScreen
@@ -141,7 +140,7 @@ fun NavGraphBuilder.mainAppNavigation(
                         }
                     }
 
-                    Chart6(modifier = Modifier.fillMaxWidth().height( 300.dp), viewmodel)
+                    CurrentWeekTask(modifier = Modifier.fillMaxWidth().height( 300.dp), viewmodel)
                     Chart5(modifier = Modifier.fillMaxWidth().height( 300.dp), viewmodel)
                 }
             }
