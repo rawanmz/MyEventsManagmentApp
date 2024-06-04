@@ -202,32 +202,34 @@ fun Chart5(
     modifier: Modifier,
     viewmodel: TaskViewModel,
 ) {
-    val data = viewmodel.taskInWeek.collectAsState(initial = null)
+    val data = viewmodel.tagWithTasks.collectAsState(initial = null)
 
     val modelProducer = remember { CartesianChartModelProducer.build() }
     LaunchedEffect(Unit) {
         withContext(Dispatchers.Default) {
             while (isActive) {
                 modelProducer.tryRunTransaction {
-                    val groupedByDate = data.value?.groupBy { it.task.date }
 
-                   val x= groupedByDate?.values?.flatMap {
-                        it.map { it.tags.size }
-                    }
-                    if (groupedByDate?.values?.isNotEmpty() == true) {
+
+                    if (data.value?.isNotEmpty() == true) {
                         columnSeries {
-                        repeat(3) {//groupedByDate?.size?:0) {
-                            series(
-                                groupedByDate.values.map { it.size } ?: listOf(1, 1, 1)
-                            )
-                        }
+                            val list = data.value?.map { it.tasks.size }
+                            repeat(3) {
+                                val tasksCount = data.value?.map { it.tasks.size }
+                                if (tasksCount != null) {
+                                    series(
+                                        tasksCount
+                                    )
+                                }
+                            }
+
                         }
                     }
                 }
             }
         }
     }
-    val groupedByDate = data.value?.groupBy { it.task.date }
+    val groupedByDate = data.value?.groupBy { it.tag.name }
     groupedByDate?.keys?.let { ComposeChart5(modelProducer, modifier, it) }
 
 }
